@@ -1,4 +1,4 @@
 #!/bin/bash
 
-source conf/MODULE
+MODULE=`cat conf/MODULE`
 docker exec -it --user root jet-${MODULE} mysqladmin -u root -p shutdown

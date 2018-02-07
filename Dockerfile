@@ -9,6 +9,7 @@ ARG DF_VOLUMES
 ARG DF_PORTS
 ARG REALM
 ARG MACHINE
+ARG SCRIPTARGS
 
 ENV http_proxy ${HTTP_PROXY:-}
 ENV https_proxy ${HTTPS_PROXY:-}
@@ -16,7 +17,7 @@ ENV https_proxy ${HTTPS_PROXY:-}
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
-  && apt-get install --yes apt-utils vim mysql-server-5.5 mysql-client-5.5 less vim
+  && apt-get install --yes apt-utils vim mysql-server-5.5 mysql-client-5.5 less vim net-tools
 
 # Fix timezone
 RUN rm /etc/localtime \
@@ -38,5 +39,5 @@ STOPSIGNAL SIGTERM
 VOLUME $DF_VOLUMES
 EXPOSE $DF_PORTS
 
-CMD ["start"]
+CMD [$SCRIPTARGS]
 

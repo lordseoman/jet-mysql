@@ -2,11 +2,11 @@
 #
 # Run a new image
 #
-source conf/defaults
-source conf/MODULE
-source conf/$MODULE
-
 VER=${1:-latest}
+MODULE=`cat conf/MODULE`
+
+source conf/defaults
+source conf/$MODULE
 
 docker run \
     -it \

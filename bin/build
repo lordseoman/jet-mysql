@@ -11,19 +11,19 @@
 
 REALM=$1
 VER=$2
+MODULE=`cat conf/MODULE`
 
-source conf/MODULE
 source conf/defaults
 source conf/$MODULE
 source conf/build
 
 PROXY="--build-arg HTTP_PROXY=${HTTP_PROXY} --build-arg HTTPS_PROXY=${HTTPS_PROXY}"
-BARGS="--build-arg DF_VOLUMES=$DF_VOLUMES --build-arg DF_PORTS=$DF_PORTS"
-OARGS="--build-arg REALM=$REALM --build-arg MACHINE=$MACHINE --build-arg TIMEZONE=$TIMEZONE"
+B1ARGS=(--build-arg DF_VOLUMES="$DF_VOLUMES" --build-arg DF_PORTS="$DF_PORTS")
+B2ARGS="--build-arg REALM=$REALM --build-arg MACHINE=$MACHINE --build-arg TIMEZONE=$TIMEZONE"
+B3ARGS=(--build-arg SCRIPTARGS="$IP $MACHINE")
 
-ARGS="${BARGS} ${OARGS} ${PROXY} ${EXARGS}"
+ARGS="${B1ARGS[@]} ${B2ARGS} "${B3ARGS[@]}" ${PROXY} ${EXARGS}"
 
-CMD="docker build --rm -t jet-${MODULE}:latest -t jet-${MODULE}:${VER} ${ARGS} ."
+CMD="docker build --rm -t jet-${MODULE}:latest -t jet-${MODULE}:${VER}"
 
-exec $CMD
-
+exec $CMD "${B1ARGS[@]}" ${B2ARGS} ${PROXY} ${EXARGS} .
