@@ -1,0 +1,16 @@
+#!/bin/bash
+####################
+#
+# Default variables
+#
+####################
+
+HTTP_PROXY=http://127.0.0.1:8080/
+HTTPS_PROXY=https://127.0.0.1:8080/
+
+IP=`hostname -i`
+MACHINE=`hostname -s`
+FQDN=`hostname -f`
+
+TIMEZONE=Australia/Melbourne
+
