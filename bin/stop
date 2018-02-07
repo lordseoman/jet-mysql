@@ -1,3 +1,4 @@
 #!/bin/bash
 
-docker exec -it --user root jet-mysql mysqladmin -u root -p shutdown
+source conf/MODULE
+docker exec -it --user root jet-${MODULE} mysqladmin -u root -p shutdown

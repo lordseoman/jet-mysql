@@ -1,12 +1,17 @@
 #!/bin/bash
+#
+# Run a new image
+#
+source conf/defaults
+source conf/MODULE
+source conf/$MODULE
 
-source clients/$1/args
+VER=${1:-latest}
 
 docker run \
     -it \
-    --name jet-mysql \
-    ${VOLUMES} \
-    -v ${DB_VOLUME}:/opt/Database \
+    --name jet-${MODULE} \
+    ${RN_VOLUMES} \
     --net=host \
-    -p 3306:3306 \
-    jet-mysql:$2
+    $RN_PORTS \
+    jet-$MODULE:$VER

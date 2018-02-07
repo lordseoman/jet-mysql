@@ -3,21 +3,27 @@
 #
 # Called to build a machine specific MySQL config.
 #
-# ./jet-mysql/build <realm> <machine> <verno>
+# ./jet-mysql/bin/build <realm> <verno>
 #
-# ./jet-mysql/build infosat master01 0.22
+# ./jet-mysql/bin/build infosat 0.22
 #
 #######################################################
 
 REALM=$1
-MACH=$2
-VER=$3
+VER=$2
 
-source clients/$REALM/args
+source conf/MODULE
+source conf/defaults
+source conf/$MODULE
+source conf/build
 
-ARGS="--build-arg REALM=$REALM --build-arg MACHINE=$MACH --build-arg PASSWORD=$DB_PASSWORD"
 PROXY="--build-arg HTTP_PROXY=${HTTP_PROXY} --build-arg HTTPS_PROXY=${HTTPS_PROXY}"
+BARGS="--build-arg DF_VOLUMES=$DF_VOLUMES --build-arg DF_PORTS=$DF_PORTS"
+OARGS="--build-arg REALM=$REALM --build-arg MACHINE=$MACHINE --build-arg TIMEZONE=$TIMEZONE"
 
-CMD="docker build --rm -t jet-mysql:latest -t jet-mysql:$MACH-$VER ${ARGS} ${PROXY} ."
+ARGS="${BARGS} ${OARGS} ${PROXY} ${EXARGS}"
+
+CMD="docker build --rm -t jet-${MODULE}:latest -t jet-${MODULE}:${VER} ${ARGS} ."
 
 exec $CMD
+

@@ -1,33 +1,33 @@
 FROM debian:jessie-slim
 
+MAINTAINER Simon Hookway <simon@obsidian.com.au>
+
 ARG HTTP_PROXY
 ARG HTTPS_PROXY
+ARG TIMEZONE
+ARG DF_VOLUMES
+ARG DF_PORTS
+ARG REALM
+ARG MACHINE
+
 ENV http_proxy ${HTTP_PROXY:-}
 ENV https_proxy ${HTTPS_PROXY:-}
 
 ENV DEBIAN_FRONTEND noninteractive
-
-ARG DB_PASSWORD
-ENV MYSQL_ROOT_PASSWORD ${DB_PASSWORD:-g0aWa5}
-
-ARG REALM
-ARG MACHINE
 
 RUN apt-get update \
   && apt-get install --yes apt-utils vim mysql-server-5.5 mysql-client-5.5 less vim
 
 # Fix timezone
 RUN rm /etc/localtime \
-  && ln -sv /usr/share/zoneinfo/America/Edmonton /etc/localtime \
+  && ln -sv /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
   && dpkg-reconfigure -f noninteractive tzdata
 
-COPY my.cnf /etc/mysql/
-COPY debian.cnf /etc/mysql/
-COPY conf.d/ /etc/mysql/conf.d/
-COPY clients/$REALM/mysql-$MACHINE.cnf /etc/mysql/conf.d/
-COPY clients/$REALM/mysql-$REALM.cnf /etc/mysql/conf.d/
-
-VOLUME ["/opt/Database", "/opt/Archive"]
+COPY mysql-conf/my.cnf /etc/mysql/
+COPY mysql-conf/debian.cnf /etc/mysql/
+COPY mysql-conf/conf.d/ /etc/mysql/conf.d/
+COPY mysql-conf/mysql-$MACHINE.cnf /etc/mysql/conf.d/
+COPY mysql-conf/mysql-$REALM.cnf /etc/mysql/conf.d/
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -35,7 +35,8 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 STOPSIGNAL SIGTERM
 
-EXPOSE 3306
+VOLUME $DF_VOLUMES
+EXPOSE $DF_PORTS
 
 CMD ["start"]
 
