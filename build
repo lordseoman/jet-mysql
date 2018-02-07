@@ -1,0 +1,23 @@
+#!/bin/bash
+#######################################################
+#
+# Called to build a machine specific MySQL config.
+#
+# ./jet-mysql/build <realm> <machine> <verno>
+#
+# ./jet-mysql/build infosat master01 0.22
+#
+#######################################################
+
+REALM=$1
+MACH=$2
+VER=$3
+
+source clients/$REALM/args
+
+ARGS="--build-arg REALM=$REALM --build-arg MACHINE=$MACH --build-arg PASSWORD=$DB_PASSWORD"
+PROXY="--build-arg HTTP_PROXY=${HTTP_PROXY} --build-arg HTTPS_PROXY=${HTTPS_PROXY}"
+
+CMD="docker build --rm -t jet-mysql:latest -t jet-mysql:$MACH-$VER ${ARGS} ${PROXY} ."
+
+exec $CMD
