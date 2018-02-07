@@ -1,0 +1,9 @@
+#
+# This mysql config file specifies host level settings
+#
+[mysqld]
+bind_address            = 10.169.251.57
+report-host             = Jet-Billing.speedcast.com
+
+server-id               = 20
+auto_increment_offset   = 1
