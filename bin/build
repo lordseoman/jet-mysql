@@ -1,11 +1,11 @@
 #!/bin/bash
 #######################################################
 #
-# Called to build a machine specific MySQL config.
+# Called to build a docker container
 #
-# ./jet-mysql/bin/build <realm> <verno>
+# ./bin/build <realm> <verno>
 #
-# ./jet-mysql/bin/build infosat 0.22
+# ./bin/build infosat 0.22
 #
 #######################################################
 
