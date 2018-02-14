@@ -1,10 +1,5 @@
 #!/bin/bash
 
-DB_PASSWORD='n0t4y0u'
-
-DF_VOLUMES="['/opt/Archive', '/opt/Database', '/opt/Reports']"
-DF_PORTS='3306'
-
 RN_VOLUMES="-v /Database:/opt/Database -v /mnt/Reports:/opt/Reports -v /mnt/Archive:/opt/Archive"
 RN_PORTS='-p 3306:3306'
 

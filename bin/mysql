@@ -1,5 +1,5 @@
 #!/bin/bash
 
-source conf/MODULE
-docker exec -it jet-${MODULE} mysql -uroot -p
+MODULE=`cat conf/MODULE`
+docker exec -it jet-${MODULE} mysql -uroot -p $@
 

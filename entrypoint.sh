@@ -1,8 +1,5 @@
 #!/bin/bash
 
-IP=$1
-MACHINE=$2
-
 sleep infinity & PID=$!
 trap "kill $PID" INT TERM
 
@@ -12,6 +9,7 @@ fi
 
 if [ ! -e /opt/Database/mysql ]; then 
     echo "First run setup."
+	echo
     mkdir -p /opt/Database/mysql/data
     mkdir -p /opt/Database/mysql/binlogs
     mkdir -p /opt/Database/mysql/logs
@@ -23,11 +21,16 @@ if [ ! -e /opt/Database/mysql ]; then
     sleep 2
     echo -n "Enter the administrator password: "
     read DB_PASSWORD
-    echo $DB_PASSWORD $IP $MACHINE
-    /usr/bin/mysqladmin -u root password '${DB_PASSWORD}'
-    #/usr/bin/mysqladmin -u root -h ${IP} password '${DB_PASSWORD}'
-    #/usr/bin/mysqladmin -u root -h ${MACHINE} password '${DB_PASSWORD}'
-    #/bin/bash
+	SERVERNAME=`echo "$SERVERNAME" | tr '[:upper:]' '[:lower:]'`
+	read -d '' QUERY <<- EOM
+		update user set password=PASSWORD('$DB_PASSWORD') where user='root';
+		update user set host='$FQDN' where user='root' and host='$SERVERNAME';
+		flush privileges;
+	EOM
+    /usr/bin/mysqladmin -u root password "$DB_PASSWORD"
+	/usr/bin/mysql --batch --password="$DB_PASSWORD" --database="mysql" -e "$QUERY"
+	echo
+	echo "Setup complete.."
 else
     /usr/bin/mysqld_safe &
 fi
