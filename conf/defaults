@@ -5,8 +5,8 @@
 #
 ####################
 
-HTTP_PROXY=http://127.0.0.1:8080/
-HTTPS_PROXY=https://127.0.0.1:8080/
+HTTP_PROXY=
+HTTPS_PROXY=
 
 IP=`hostname -i`
 MACHINE=`hostname -s`
