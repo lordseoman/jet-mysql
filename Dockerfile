@@ -11,13 +11,10 @@ ARG MODULE
 ARG VERSION
 ARG CLIENT
 ARG MACHINE
-ARG DB_PASSWORD
 
 ENV http_proxy ${HTTP_PROXY:-}
 ENV https_proxy ${HTTPS_PROXY:-}
 ENV DEBIAN_FRONTEND noninteractive
-ENV CLIENT $CLIENT
-ENV MYSQL_ROOT_PASSWORD ${DB_PASSWORD:-g0aWa5}
 
 RUN apt-get clean \
   && apt-get update \
@@ -53,8 +50,13 @@ COPY mysql-conf/debian.cnf /etc/mysql/
 COPY mysql-conf/conf.d/ /etc/mysql/conf.d/
 COPY mysql-conf/mysql-$MACHINE.cnf /etc/mysql/conf.d/
 COPY mysql-conf/mysql-$CLIENT.cnf /etc/mysql/conf.d/
+
 COPY conf/supervisord.conf /etc/supervisor/
 COPY conf/supervisor.conf.d/ /etc/supervisor/conf.d/
+
+COPY skel/root/ /root/
+
+ENV HOME /root
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

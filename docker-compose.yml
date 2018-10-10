@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  jetdb:
+    image: jet-mysql:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db:/opt/Database/mysql
+    
