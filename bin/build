@@ -18,7 +18,7 @@ source conf/$MODULE
 source conf/build
 
 PROXY="--build-arg HTTP_PROXY=${HTTP_PROXY} --build-arg HTTPS_PROXY=${HTTPS_PROXY}"
-BARGS="--build-arg DF_VOLUMES=$DF_VOLUMES --build-arg DF_PORTS=$DF_PORTS"
+BARGS=""
 OARGS="--build-arg CLIENT=$CLIENT --build-arg MACHINE=$MACHINE --build-arg TIMEZONE=$TIMEZONE"
 
 ARGS="${BARGS} ${OARGS} ${PROXY} ${EXARGS}"

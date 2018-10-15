@@ -5,8 +5,6 @@ MAINTAINER Simon Hookway <simon@obsidian.com.au>
 ARG HTTP_PROXY
 ARG HTTPS_PROXY
 ARG TIMEZONE
-ARG DF_VOLUMES
-ARG DF_PORTS
 ARG MODULE
 ARG VERSION
 ARG CLIENT
@@ -16,11 +14,9 @@ ENV http_proxy ${HTTP_PROXY:-}
 ENV https_proxy ${HTTPS_PROXY:-}
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get clean \
-  && apt-get update \
+RUN apt-get update \
   && apt-get install --yes apt-utils vim less htop wget unzip curl locales net-tools screen tcpdump strace \
   && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
-#  && ln -s /etc/locale.alias /usr/share/locale/locale.alias \
   && /usr/sbin/locale-gen en_US.UTF-8 \
   && dpkg-reconfigure -f noninteractive locales \
   && /usr/sbin/update-locale LANG=en_US.UTF-8
@@ -55,6 +51,9 @@ COPY conf/supervisord.conf /etc/supervisor/
 COPY conf/supervisor.conf.d/ /etc/supervisor/conf.d/
 
 COPY skel/root/ /root/
+COPY conf/defaults /root/
+
+RUN mkdir -p /opt/Database && chown mysql:mysql /opt/Database
 
 ENV HOME /root
 
@@ -64,8 +63,8 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 STOPSIGNAL SIGTERM
 
-VOLUME $DF_VOLUMES
-EXPOSE $DF_PORTS
+VOLUME ["/opt/Database", "/opt/Reports", "/opt/Archive"]
+EXPOSE 3306
 
 CMD ["start"]
 
