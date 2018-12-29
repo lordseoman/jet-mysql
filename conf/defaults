@@ -12,5 +12,11 @@ IP=`hostname -i`
 MACHINE=`hostname -s`
 FQDN=`hostname -f`
 
+if [[ $FQDN =~ .*.internal$ ]]; then
+    MACHINE="%.internal"
+fi
+
+MASK=24
+
 TIMEZONE=Australia/Melbourne
 

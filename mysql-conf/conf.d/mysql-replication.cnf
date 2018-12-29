@@ -1,5 +1,5 @@
 [mysqld]
-datadir     = /opt/Database/mysql/data
+datadir     = /opt/mysql/data
 
 skip-slave-start
 
@@ -28,13 +28,13 @@ slave_transaction_retries       = 30
 # replicate-ignore-table  = <db>.memory_session
 # replicate-ignore-table  = <db>.memory_usage_u
 
-log_bin                 = /opt/Database/mysql/binlogs/mysql-bin.log
+log_bin                 = /opt/mysql/binlogs/mysql-bin.log
 binlog_do_db            = 
 binlog_cache_size       = 16M
 
-relay-log               = /opt/Database/mysql/binlogs/slave-relay.log
-relay-log-index         = /opt/Database/mysql/binlogs/slave-relay-log.index
-relay-log-info-file     = /opt/Database/mysql/binlogs/slave-relay-log.info
+relay-log               = /opt/mysql/binlogs/slave-relay.log
+relay-log-index         = /opt/mysql/binlogs/slave-relay-log.index
+relay-log-info-file     = /opt/mysql/binlogs/slave-relay-log.info
 
 expire_logs_days        = 10
 max_binlog_size         = 1G

@@ -13,18 +13,29 @@ chown mysql:mysql -R /opt/Database/mysql
 echo "Installing initial database.."
 mysql_install_db --user=mysql
 
+if [ -n "$AWS_EXECUTION_ENV" ]; then
+    un=$MYSQL_JET_USERNAME
+    hn='%.internal'
+    pw=$MYSQL_JET_PASSWORD
+    GRANT="GRANT ALL ON *.* TO '${un}'@'${hn}' IDENTIFIED BY '${pw}';GRANT SHOW DATABASES ON *.* TO '${un}'@'${hn}';"
+else
+    GRANT=""
+fi
+
 sql=$(cat <<EOF
 GRANT ALL ON *.* TO '${MYSQL_JET_USERNAME}'@'localhost' IDENTIFIED BY '${MYSQL_JET_PASSWORD}';
 GRANT ALL ON *.* TO '${MYSQL_JET_USERNAME}'@'127.0.0.1' IDENTIFIED BY '${MYSQL_JET_PASSWORD}';
-GRANT ALL ON *.* TO '${MYSQL_JET_USERNAME}'@'${IP}/24' IDENTIFIED BY '${MYSQL_JET_PASSWORD}';
+GRANT ALL ON *.* TO '${MYSQL_JET_USERNAME}'@'${IP}/${MASK}' IDENTIFIED BY '${MYSQL_JET_PASSWORD}';
 GRANT ALL ON *.* TO '${MYSQL_JET_USERNAME}'@'${MACHINE}' IDENTIFIED BY '${MYSQL_JET_PASSWORD}';
-GRANT SHOW DATABASES ON *.* TO 'jetdb'@'localhost';
-GRANT SHOW DATABASES ON *.* TO 'jetdb'@'127.0.0.1';
-GRANT SHOW DATABASES ON *.* TO 'jetdb'@'${IP}/24';
-GRANT SHOW DATABASES ON *.* TO 'jetdb'@'${MACHINE}';
+GRANT SHOW DATABASES ON *.* TO '${MYSQL_JET_USERNAME}'@'localhost';
+GRANT SHOW DATABASES ON *.* TO '${MYSQL_JET_USERNAME}'@'127.0.0.1';
+GRANT SHOW DATABASES ON *.* TO '${MYSQL_JET_USERNAME}'@'${IP}/${MASK}';
+GRANT SHOW DATABASES ON *.* TO '${MYSQL_JET_USERNAME}'@'${MACHINE}';
+$GRANT
 SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${MYSQL_ROOT_PASSWORD}');
 SET PASSWORD FOR 'root'@'127.0.0.1' = PASSWORD('${MYSQL_ROOT_PASSWORD}');
-SET PASSWORD FOR 'root'@'${MACHINE}' = PASSWORD('${MYSQL_ROOT_PASSWORD}');
+SET PASSWORD FOR 'root'@'::1' = PASSWORD('${MYSQL_ROOT_PASSWORD}');
+SET PASSWORD FOR 'root'@'${FQDN}' = PASSWORD('${MYSQL_ROOT_PASSWORD}');
 FLUSH PRIVILEGES;
 EOF
 )
@@ -50,7 +61,4 @@ echo "Setting permissions for jetdb.."
 mysql -uroot -e "${sql}"
 mysqladmin -uroot -p"${MYSQL_ROOT_PASSWORD}" shutdown
 
-rm /root/docker-setup.env
-touch /.docker-setup.cf
 echo "Setup complete."
-

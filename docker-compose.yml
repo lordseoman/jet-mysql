@@ -6,6 +6,7 @@ services:
     hostname: jetdb
     ports:
       - "3305:3306"
+      - "9001:9001"
     volumes:
       - /opt/docker/jet-db:/opt/Database/mysql
     

@@ -9,7 +9,7 @@ source conf/$MODULE
 VER=${1:-latest}
 
 docker run \
-    -it \
+    -td \
     --name jet-${MODULE} \
     ${RN_VOLUMES} \
     --net=host \
